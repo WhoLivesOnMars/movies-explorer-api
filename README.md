@@ -8,6 +8,6 @@
 
 IP 51.250.15.115
 
-Frontend https://mesto.app.nomoredomainsrocks.ru
+Frontend https://movies.app.nomoredomainsmonster.ru (frontend будет добавлен в следующей итерации)
 
-Backend https://api.mesto.app.nomoredomainsrocks.ru
+Backend https://api.movies.app.nomoredomainsmonster.ru
