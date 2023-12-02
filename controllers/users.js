@@ -44,6 +44,7 @@ module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then((hash) => User.create({ ...req.body, password: hash })
       .then((user) => res.status(created).send({
+        _id: user._id,
         email: user.email,
         name: user.name,
       }))
@@ -62,10 +63,11 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.updateUser = (req, res, next) => {
-  User.findByIdAndUpdate(req.user._id, {
-    name: req.body.name,
-    email: req.body.email,
-  }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(
+    req.user._id,
+    req.body,
+    { new: true, runValidators: true },
+  )
     .orFail(() => {
       throw new NotFoundError('Пользователь с указанным id не существует');
     })
