@@ -16,7 +16,7 @@ const limiter = require('./middlewares/rate-limiter');
 const { MONGO_URL } = require('./utils/config');
 
 const corsOptions = {
-  origin: 'https://movies.app.nomoredomainsmonster.ru',
+  origin: 'http://localhost:3000',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,
