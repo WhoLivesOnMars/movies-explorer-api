@@ -15,7 +15,12 @@ const limiter = require('./middlewares/rate-limiter');
 
 const { MONGO_URL } = require('./utils/config');
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://movies.app.nomoredomainsmonster.ru',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+}));
+app.options('*', cors());
+
 app.use(helmet());
 mongoose.connect(MONGO_URL, { useNewUrlParser: true }).then(() => {
   console.log('Connected to db');
