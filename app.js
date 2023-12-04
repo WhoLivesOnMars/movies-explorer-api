@@ -15,11 +15,13 @@ const limiter = require('./middlewares/rate-limiter');
 
 const { MONGO_URL } = require('./utils/config');
 
-app.use(cors({
+const corsOptions = {
   origin: 'https://movies.app.nomoredomainsmonster.ru',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-}));
-app.options('*', cors());
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
 
 app.use(helmet());
 mongoose.connect(MONGO_URL, { useNewUrlParser: true }).then(() => {
