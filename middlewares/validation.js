@@ -29,7 +29,7 @@ module.exports.createMovieValidation = celebrate({
     director: Joi.string().required().min(2).max(30),
     duration: Joi.number().required(),
     year: Joi.number().required().min(1900).max(2024),
-    description: Joi.string().required().min(1).max(100),
+    description: Joi.string().required(),
     image: Joi.string().required().uri({ scheme: ['http', 'https'] }).required(),
     trailerLink: Joi.string().required().uri({ scheme: ['http', 'https'] }).required(),
     thumbnail: Joi.string().required().uri({ scheme: ['http', 'https'] }).required(),
