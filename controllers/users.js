@@ -41,12 +41,19 @@ module.exports.getCurrentUser = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  bcrypt.hash(req.body.password, 10)
-    .then((hash) => User.create({ ...req.body, password: hash })
+  const { email, password, name } = req.body;
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      email,
+      password: hash,
+      name,
+    })
       .then((user) => res.status(created).send({
-        _id: user._id,
-        email: user.email,
-        name: user.name,
+        data: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+        },
       }))
       .catch((err) => {
         if (err.code === duplicate) {
@@ -56,10 +63,7 @@ module.exports.createUser = (req, res, next) => {
         } else {
           next(err);
         }
-      }))
-    .catch((err) => {
-      next(err);
-    });
+      }));
 };
 
 module.exports.updateUser = (req, res, next) => {
@@ -94,7 +98,7 @@ module.exports.login = (req, res, next) => {
           SECRET_KEY,
           { expiresIn: '7d' },
         );
-        res.send({ token });
+        res.status(ok).send({ token });
       }
     })
     .catch((err) => {
