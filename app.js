@@ -15,7 +15,12 @@ const limiter = require('./middlewares/rate-limiter');
 
 const { MONGO_URL } = require('./utils/config');
 
-app.use(cors());
+const corsOptions = {
+  origin: '*',
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use(helmet());
 mongoose.connect(MONGO_URL, { useNewUrlParser: true }).then(() => {
