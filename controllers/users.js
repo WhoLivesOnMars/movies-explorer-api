@@ -16,7 +16,7 @@ const { SECRET_KEY } = require('../utils/config');
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
-      res.send(users);
+      res.status(ok).send(users);
     })
     .catch((err) => {
       next(err);
@@ -29,7 +29,15 @@ module.exports.getCurrentUser = (req, res, next) => {
       throw new NotFoundError('Пользователь с указанным id не существует');
     })
     .then((user) => {
-      res.status(ok).send(user);
+      res.send(
+        {
+          data: {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+          },
+        },
+      );
     })
     .catch((err) => {
       if (err instanceof mongoose.CastError) {
