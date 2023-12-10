@@ -57,31 +57,19 @@ module.exports.deleteMovie = (req, res, next) => {
 };
 
 module.exports.createMovie = (req, res, next) => {
-  const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    nameRU,
-    nameEN,
-  } = req.body;
   Movie.create({
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
+    country: req.body.country,
+    director: req.body.director,
+    duration: req.body.duration,
+    year: req.body.year,
+    description: req.body.description,
+    image: req.body.image,
+    trailerLink: req.body.trailerLink,
+    thumbnail: req.body.thumbnail,
     owner: req.user._id,
     movieId: req.body.movieId,
-    nameRU,
-    nameEN,
+    nameRU: req.body.nameRU,
+    nameEN: req.body.nameEN,
   })
     .then((movie) => res.status(created).send(movie))
     .catch((err) => {
