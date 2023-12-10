@@ -9,18 +9,7 @@ const { ok, created } = require('../utils/constants');
 
 module.exports.getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
-    .then((movies) => {
-      if (!movies) {
-        throw new NotFoundError('Фильмы не найдены');
-      }
-
-      const userMovies = movies.filter((m) => m.owner._id.toString() === req.user._id);
-
-      if (!userMovies) {
-        throw new NotFoundError('Вы не сохранил ни одного фильма.');
-      }
-      res.send({ data: userMovies });
-    })
+    .then((movies) => res.status(ok).send({ data: movies }))
     .catch((err) => {
       next(err);
     });
