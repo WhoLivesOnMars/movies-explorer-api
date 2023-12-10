@@ -9,9 +9,7 @@ const { ok, created } = require('../utils/constants');
 
 module.exports.getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
-    .then((movies) => {
-      res.send(movies);
-    })
+    .then((movies) => res.status(ok).send({ data: movies }))
     .catch((err) => {
       next(err);
     });
@@ -40,8 +38,10 @@ module.exports.deleteMovie = (req, res, next) => {
       if (movie.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Вы не можете удалить этот фильм');
       } else {
-        movie.deleteOne()
-          .then(() => res.send({ message: 'Фильм удален' }))
+        Movie.findByIdAndRemove(req.params.movieId)
+          .then(() => {
+            res.status(ok).send({ message: 'Фильм удален' });
+          })
           .catch((err) => {
             next(err);
           });
@@ -57,23 +57,33 @@ module.exports.deleteMovie = (req, res, next) => {
 };
 
 module.exports.createMovie = (req, res, next) => {
+  const {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    nameRU,
+    nameEN,
+  } = req.body;
   Movie.create({
-    country: req.body.country,
-    director: req.body.director,
-    duration: req.body.duration,
-    year: req.body.year,
-    description: req.body.description,
-    image: req.body.image,
-    trailerLink: req.body.trailerLink,
-    thumbnail: req.body.thumbnail,
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
     owner: req.user._id,
     movieId: req.body.movieId,
-    nameRU: req.body.nameRU,
-    nameEN: req.body.nameEN,
+    nameRU,
+    nameEN,
   })
-    .then((movie) => {
-      res.status(created).send(movie);
-    })
+    .then((movie) => res.status(created).send({ data: movie }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при создании фильма'));
