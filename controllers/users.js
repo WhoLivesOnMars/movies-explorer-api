@@ -86,9 +86,11 @@ module.exports.updateUser = (req, res, next) => {
     })
     .then((user) => {
       res.send({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
+        data: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+        },
       });
     })
     .catch((err) => {
