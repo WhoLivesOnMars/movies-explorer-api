@@ -75,16 +75,21 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.updateUser = (req, res, next) => {
+  const { name, email } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
-    req.body,
+    { name, email },
     { new: true, runValidators: true },
   )
     .orFail(() => {
       throw new NotFoundError('Пользователь с указанным id не существует');
     })
     .then((user) => {
-      res.send(user);
+      res.send({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
