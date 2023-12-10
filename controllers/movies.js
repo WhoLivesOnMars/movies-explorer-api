@@ -9,7 +9,32 @@ const { ok, created } = require('../utils/constants');
 
 module.exports.getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
-    .then((movies) => res.status(ok).send(movies))
+    .then((movies) => {
+      if (!movies) {
+        throw new NotFoundError('Фильмы не найдены');
+      }
+
+      const userMovies = movies.filter((m) => m.owner._id.toString() === req.user._id);
+
+      if (!userMovies) {
+        throw new NotFoundError('Вы не сохранил ни одного фильма.');
+      }
+      res.send({ data: userMovies });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports.getUserMovies = (req, res, next) => {
+  Movie.find({ owner: req.user._id })
+    .orFail(() => {
+      throw new NotFoundError('Фильм не найден');
+    })
+    .then((movies) => {
+      const userMovies = movies.filter((m) => m.owner._id.toString() === req.user._id);
+      res.status(ok).send({ data: userMovies });
+    })
     .catch((err) => {
       next(err);
     });
@@ -24,7 +49,7 @@ module.exports.deleteMovie = (req, res, next) => {
       if (movie.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Вы не можете удалить этот фильм');
       } else {
-        movie.deleteOne()
+        Movie.findByIdAndRemove(req.params.movieId)
           .then(() => {
             res.status(ok).send({ message: 'Фильм удален' });
           })
@@ -43,19 +68,31 @@ module.exports.deleteMovie = (req, res, next) => {
 };
 
 module.exports.createMovie = (req, res, next) => {
+  const {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    nameRU,
+    nameEN,
+  } = req.body;
   Movie.create({
-    country: req.body.country,
-    director: req.body.director,
-    duration: req.body.duration,
-    year: req.body.year,
-    description: req.body.description,
-    image: req.body.image,
-    trailerLink: req.body.trailerLink,
-    thumbnail: req.body.thumbnail,
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
     owner: req.user._id,
     movieId: req.body.movieId,
-    nameRU: req.body.nameRU,
-    nameEN: req.body.nameEN,
+    nameRU,
+    nameEN,
   })
     .then((movie) => res.status(created).send(movie))
     .catch((err) => {
