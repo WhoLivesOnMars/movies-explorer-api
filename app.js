@@ -15,14 +15,14 @@ const limiter = require('./middlewares/rate-limiter');
 
 const { MONGO_URL } = require('./utils/config');
 
-/* const corsOptions = {
+const corsOptions = {
   origin: '*',
   credentials: true,
 };
 
 app.use(cors(corsOptions));
-*/
-const whitelist = ['http://localhost:3000', 'http://localhost:3001'];
+
+/* const whitelist = ['http://localhost:3000', 'http://localhost:3001'];
 
 const corsOptionsCheck = (req, callback) => {
   let corsOptions;
@@ -54,7 +54,7 @@ app.use((req, res, next) => {
   }
   next();
 });
-
+*/
 app.use(helmet());
 mongoose.connect(MONGO_URL, { useNewUrlParser: true }).then(() => {
   console.log('Connected to db');
