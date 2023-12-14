@@ -15,7 +15,7 @@ module.exports.getMovies = (req, res, next) => {
     });
 };
 
-module.exports.getUserMovies = (req, res, next) => {
+/* module.exports.getUserMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
     .orFail(() => {
       throw new NotFoundError('Фильм не найден');
@@ -27,7 +27,7 @@ module.exports.getUserMovies = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
-};
+}; */
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
